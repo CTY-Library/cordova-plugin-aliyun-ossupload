@@ -2,7 +2,7 @@
 
 #import <Cordova/CDV.h>
 #import <AliyunOSSiOS/OSSService.h>
-#import "OSSWrapper.h"
+ 
 
 @interface FileUpload : CDVPlugin {
     NSString *uploadFilePath;//上传文件的路径
@@ -54,9 +54,7 @@
     
     OSSClient *defaultClient = [[OSSClient alloc] initWithEndpoint:OSS_ENDPOINT credentialProvider:credentialProvider clientConfiguration:cfg];
     [OSSManager sharedManager].defaultClient = defaultClient;
-  
-    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"success"];
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+ 
  }
   
 
