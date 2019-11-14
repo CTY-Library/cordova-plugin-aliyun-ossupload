@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<plugin id="cordova-plugins-aliyunOSSupload"
+  xmlns="http://apache.org/cordova/ns/plugins/1.0" 
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  version="1.0.0">  
+  <name>aliyunOSSupload</name>  
+  <preference name="SECRETKEY"/>  
+
+  <js-module name="FileUpload" src="www/FileUpload.js"> 
+    <clobbers target="aliyunOSSupload"/> 
+  </js-module> 
+
+  <platform name="android"> 
+    <config-file parent="/*" target="res/xml/config.xml"> 
+      <feature name="FileUpload"> 
+        <param name="android-package" value="com.plugin.aliyun.FileUpload"/> 
+      </feature> 
+    </config-file>  
+    <config-file target="AndroidManifest.xml" parent="/manifest/application"> 
+      <meta-data android:name="com.plugin.aliyun.SECRET_KEY" android:value="$SECRETKEY"/> 
+    </config-file>  
+    <config-file parent="/*" target="AndroidManifest.xml"> 
+      <uses-permission android:name="android.permission.INTERNET"/>  
+      <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>  
+      <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>  
+      <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>  
+      <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/> 
+    </config-file>  
+    <source-file src="src/android/FileUpload.java" target-dir="src/com/plugin/aliyun/FileUpload"/>  
+    <framework src="com.aliyun.dpa:oss-android-sdk:+"/> 
+    <framework src="org.bouncycastle:bcpkix-jdk15on:1.60"/>
+  </platform>  
+
+  <platform name="ios"> 
+    <config-file parent="/*" target="config.xml"> 
+      <feature name="FileUpload"> 
+        <param name="ios-package" value="FileUpload"/> 
+      </feature> 
+      <preference name="SECRET_KEY" value="$SECRETKEY"/>
+    </config-file>  
+     <!-- 依赖库 -->
+    <framework src="libresolv.9.tbd" weak="true"/>
+    <framework src="src/ios/lib/AliyunOSSiOS.framework" custom="true"/>
+  
+     <!-- 源文件 -->
+     <source-file src="src/ios/FileUpload.m"/> 
+     <header-file src="src/ios/wrapper/DownloadService.h" />  
+     <source-file src="src/ios/wrapper/DownloadService.m" /> 
+     <header-file src="src/ios/wrapper/OSSManager.h" />  
+     <source-file src="src/ios/wrapper/OSSManager.m"/> 
+     <header-file src="src/ios/wrapper/OSSTestMacros.h" />
+     <header-file src="src/ios/wrapper/OSSWrapper.h" />  
+     <source-file src="src/ios/wrapper/OSSWrapper.m"/> 
+  </platform> 
+
+</plugin>
