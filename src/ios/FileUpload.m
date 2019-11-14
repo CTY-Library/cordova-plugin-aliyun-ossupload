@@ -30,6 +30,7 @@
 //普通上传
 - (void)putObject:(CDVInvokedUrlCommand*)command
 { 
+	[self pluginInitialize];
     CDVPluginResult* pluginResult = nil;
     NSString* str_data = [command.arguments objectAtIndex:0]; 
     endPoint =  [command.arguments objectAtIndex:1];
