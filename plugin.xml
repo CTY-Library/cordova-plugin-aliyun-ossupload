@@ -40,10 +40,7 @@
       <preference name="SECRET_KEY" value="$SECRETKEY"/>
     </config-file>  
      <!-- 依赖库 -->
-	<framework src="libresolv.tbd" weak="true"/>
-    <framework src="libresolv.9.tbd" weak="true"/>
-	<framework src="SystemConfiguration.framework" weak="true"/>
-	<framework src="CoreTelephony.framework" weak="true"/>
+    <framework src="libresolv.9.tbd" weak="true"/>  
     <framework src="src/ios/lib/AliyunOSSiOS.framework" custom="true"/>
   
      <!-- 源文件 -->
