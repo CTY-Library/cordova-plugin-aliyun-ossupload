@@ -7,7 +7,7 @@
   <name>aliyunOSSupload</name>  
   <preference name="SECRETKEY"/>  
 
-  <js-module name="FileUpload" src="www/FileUpload.js"> 
+  <js-module name="aliyunOSSupload" src="www/FileUpload.js"> 
     <clobbers target="aliyunOSSupload"/> 
   </js-module> 
 
