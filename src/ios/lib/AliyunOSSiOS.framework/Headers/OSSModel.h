@@ -144,8 +144,8 @@ __attribute__((deprecated("Please use OSSAuthCredentialProvider or its subClass 
 @interface OSSAuthCredentialProvider : OSSFederationCredentialProvider
 @property (nonatomic, copy) NSString * authServerUrl;
 @property (nonatomic, copy) NSData * (^responseDecoder)(NSData *);
-- (instancetype)initWithAuthServerUrl:(NSString *)data mkey:(NSString *)mkey;
-- (instancetype)initWithAuthServerUrl:(NSString *)str_data mkey:(NSString *)mkey responseDecoder:(nullable OSSResponseDecoderBlock)decoder;
+- (instancetype)initWithAuthServerUrl:(NSString *)AccessKeyId AccessKeySecret:(NSString *)AccessKeySecret SecurityToken:(NSString *)SecurityToken Expiration:(NSString *)Expiration;
+- (instancetype)initWithAuthServerUrl:(NSString *)AccessKeyId AccessKeySecret:(NSString *)AccessKeySecret SecurityToken:(NSString *)SecurityToken Expiration:(NSString *)Expiration  responseDecoder:(nullable OSSResponseDecoderBlock)decoder;
 @end
 
 /**
