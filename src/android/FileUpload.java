@@ -137,8 +137,8 @@ public class FileUpload extends CordovaPlugin {
         if (!file.exists()) {
             callbackContext.error("Expected one non-empty string argument localFile.");
             return;
-        }
-
+        } 
+        SimpleDateFormat date1 = new SimpleDateFormat("初始化开始:yyyy年MM月dd日：HH:mm:ss---SSS(毫秒)");
         // 构造上传请求
         OSSCredentialProvider credentialProvider = new OSSAuthCredentialsProvider("") {
             @Override
@@ -183,7 +183,7 @@ public class FileUpload extends CordovaPlugin {
                 }
             });
         }
-
+        SimpleDateFormat date2 = new SimpleDateFormat("初始化结束:yyyy年MM月dd日：HH:mm:ss---SSS(毫秒)");
         // 异步上传时可以设置进度回调
         put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
             @Override
@@ -191,11 +191,12 @@ public class FileUpload extends CordovaPlugin {
                 int progress = (int) (100 * currentSize / totalSize);
             }
         });
-
+        SimpleDateFormat date_up1 = new SimpleDateFormat(" 上传开始:yyyy年MM月dd日：HH:mm:ss---SSS(毫秒) ");
         OSSAsyncTask task = oss.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
             @Override
             public void onSuccess(PutObjectRequest request, PutObjectResult result) {
-                callbackContext.success("success");
+                SimpleDateFormat date_up2 = new SimpleDateFormat(" 上传结束:yyyy年MM月dd日：HH:mm:ss---SSS(毫秒) ");
+                callbackContext.success("success "+date1+date2+ date_up1 + date_up2 );
             }
 
             @Override

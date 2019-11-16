@@ -37,7 +37,7 @@
       <feature name="FileUpload"> 
         <param name="ios-package" value="FileUpload"/> 
       </feature> 
-      <preference name="SECRET_KEY" value="$SECRETKEY"/>
+      <preference name="secret_key" value="$SECRETKEY"/>
     </config-file>  
      <!-- 依赖库 -->
     <framework src="libresolv.9.tbd" weak="true"/>  
