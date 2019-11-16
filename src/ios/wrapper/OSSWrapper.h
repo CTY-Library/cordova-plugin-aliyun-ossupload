@@ -3,7 +3,7 @@
 //  AliyunOSSSDK-iOS-Example
 //
 //  Created by huaixu on 2018/10/23.
-//  Copyright © 2018 aliyun. All rights reserved.
+//  Copyright  2018 aliyun. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)asyncPutImage:(NSString *)objectKey
         localFilePath:(NSString *)filePath
+        oss_bucket_private:(NSString *)oss_bucket_private 
               success:(void (^_Nullable)(id))success
               failure:(void (^_Nullable)(NSError*))failure;
 
@@ -35,6 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param failure failure block
  */
 - (void)asyncGetImage:(NSString *)objectKey
+        oss_bucket_private:(NSString *)oss_bucket_private
               success:(void (^_Nullable)(id))success
               failure:(void (^_Nullable)(NSError*))failure;
 
@@ -72,8 +74,9 @@ NS_ASSUME_NONNULL_BEGIN
  *    @param     size     font size
  */
 - (void)textWaterMark:(NSString *)object
+            oss_bucket_private:(NSString *)oss_bucket_private
             waterText:(NSString *)text
-           objectSize:(int)size
+            objectSize:(int)size
               success:(void (^_Nullable)(id))success
               failure:(void (^_Nullable)(NSError*))failure;
 
@@ -85,6 +88,7 @@ NS_ASSUME_NONNULL_BEGIN
  *    @param     height    height
  */
 - (void)reSize:(NSString *) object
+        oss_bucket_private:(NSString *)oss_bucket_private
       picWidth:(int) width
      picHeight:(int) height
        success:(void (^_Nullable)(id))success

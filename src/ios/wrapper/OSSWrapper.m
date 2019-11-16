@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "OSSWrapper.h"
 #import "OSSManager.h"
-#import "OSSTestMacros.h"
+#import "OSSMacros.h"
 
 @interface OSSWrapper ()
 
@@ -24,7 +24,7 @@ NSString * const font = @"d3F5LXplbmhlaQ==";
 
 @implementation OSSWrapper
 
-- (void)asyncGetImage:(NSString *)objectKey success:(void (^)(id _Nullable))success failure:(void (^)(NSError * _Nonnull))failure {
+- (void)asyncGetImage:(NSString *)objectKey oss_bucket_private:(NSString *)oss_bucket_private success:(void (^)(id _Nullable))success failure:(void (^)(NSError * _Nonnull))failure {
     if (![objectKey oss_isNotEmpty]) {
         NSError *error = [NSError errorWithDomain:NSInvalidArgumentException code:0 userInfo:@{NSLocalizedDescriptionKey: @"objectKey should not be nil"}];
         failure(error);
@@ -34,7 +34,7 @@ NSString * const font = @"d3F5LXplbmhlaQ==";
     NSString *downloadFilePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:objectKey];
     
     _normalDloadRequest = [OSSGetObjectRequest new];
-    _normalDloadRequest.bucketName = OSS_BUCKET_PRIVATE;
+    _normalDloadRequest.bucketName = oss_bucket_private;
     _normalDloadRequest.objectKey = objectKey;
     _normalDloadRequest.downloadToFileURL = [NSURL URLWithString:downloadFilePath];
     _normalDloadRequest.downloadProgress = ^(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
@@ -57,7 +57,7 @@ NSString * const font = @"d3F5LXplbmhlaQ==";
     });
 }
 
-- (void)asyncPutImage:(NSString *)objectKey localFilePath:(NSString *)filePath success:(void (^)(NSString *_Nullable))success failure:(void (^)(NSError * _Nonnull))failure {
+- (void)asyncPutImage:(NSString *)objectKey localFilePath:(NSString *)filePath oss_bucket_private:(NSString *)oss_bucket_private  success:(void (^)(id _Nullable))success failure:(void (^)(NSError * _Nonnull))failure  {
     if (![objectKey oss_isNotEmpty]) {
         NSError *error = [NSError errorWithDomain:NSInvalidArgumentException code:0 userInfo:@{NSLocalizedDescriptionKey: @"objectKey should not be nil"}];
         failure(error);
@@ -65,7 +65,7 @@ NSString * const font = @"d3F5LXplbmhlaQ==";
     }
     
     _normalUploadRequest = [OSSPutObjectRequest new];
-    _normalUploadRequest.bucketName = OSS_BUCKET_PRIVATE;
+    _normalUploadRequest.bucketName = oss_bucket_private;
     _normalUploadRequest.objectKey = objectKey;
     _normalUploadRequest.uploadingFileURL = [NSURL fileURLWithPath:filePath];
     _normalUploadRequest.isAuthenticationRequired = YES;
@@ -73,11 +73,11 @@ NSString * const font = @"d3F5LXplbmhlaQ==";
         float progress = 1.f * totalByteSent / totalBytesExpectedToSend;
         OSSLogDebug(@"上传文件进度: %f", progress);
     };
-    _normalUploadRequest.callbackParam = @{
-                                           @"callbackUrl": OSS_CALLBACK_URL,
-                                           // callbackBody可自定义传入的信息
-                                           @"callbackBody": @"filename=${object}"
-                                           };
+//    _normalUploadRequest.callbackParam = @{
+//                                           @"callbackUrl": OSS_CALLBACK_URL,
+//                                           // callbackBody可自定义传入的信息
+//                                           @"callbackBody": @"filename=${object}"
+//                                           };
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         OSSTask * task = [[OSSManager sharedManager].defaultClient putObject:_normalUploadRequest];
         [task continueWithBlock:^id(OSSTask *task) {
@@ -166,7 +166,7 @@ NSString * const font = @"d3F5LXplbmhlaQ==";
     });
 }
 
-- (void)textWaterMark:(NSString *)object waterText:(NSString *)text objectSize:(int)size success:(void (^)(id _Nonnull))success failure:(void (^)(NSError * _Nonnull))failure {
+- (void)textWaterMark:(NSString *)object  oss_bucket_private:(NSString *)oss_bucket_private  waterText:(NSString *)text objectSize:(int)size success:(void (^)(id _Nonnull))success failure:(void (^)(NSError * _Nonnull))failure {
     NSString * base64Text = [OSSUtil calBase64WithData:(UTF8Char*)[text cStringUsingEncoding:NSASCIIStringEncoding]];
     NSString * queryString = [NSString stringWithFormat:@"@watermark=2&type=%@&text=%@&size=%d",
                               font, base64Text, size];
@@ -174,16 +174,16 @@ NSString * const font = @"d3F5LXplbmhlaQ==";
     NSLog(@"Text: %@", text);
     NSLog(@"QueryString: %@", queryString);
     NSLog(@"%@%@", object, queryString);
-    [self asyncGetImage:[NSString stringWithFormat:@"%@%@", object, queryString] success:success failure:failure];
+    [self asyncGetImage:[NSString stringWithFormat:@"%@%@", object, queryString] oss_bucket_private:oss_bucket_private success:success failure:failure];
 }
 
-- (void)reSize:(NSString *)object picWidth:(int)width picHeight:(int)height success:(void (^)(id _Nonnull))success failure:(void (^)(NSError * _Nonnull))failure {
+- (void)reSize:(NSString *)object  oss_bucket_private:(NSString *)oss_bucket_private  picWidth:(int)width picHeight:(int)height success:(void (^)(id _Nonnull))success failure:(void (^)(NSError * _Nonnull))failure {
     NSString * queryString = [NSString stringWithFormat:@"@%dw_%dh_1e_1c", width, height];
     NSLog(@"ResizeImage: %@", object);
     NSLog(@"Width: %d", width);
     NSLog(@"Height: %d", height);
     NSLog(@"QueryString: %@", queryString);
-    [self asyncGetImage:[NSString stringWithFormat:@"%@%@", object, queryString] success:success failure:failure];
+    [self asyncGetImage:[NSString stringWithFormat:@"%@%@", object, queryString] oss_bucket_private:oss_bucket_private success:success failure:failure];
 }
 
 @end

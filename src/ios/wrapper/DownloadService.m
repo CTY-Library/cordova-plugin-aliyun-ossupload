@@ -7,7 +7,7 @@
 //
 
 #import "DownloadService.h"
-#import "OSSTestMacros.h"
+#import "OSSMacros.h"
 
 @implementation DownloadRequest
 

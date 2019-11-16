@@ -49,7 +49,7 @@
      <source-file src="src/ios/wrapper/DownloadService.m" /> 
      <header-file src="src/ios/wrapper/OSSManager.h" />  
      <source-file src="src/ios/wrapper/OSSManager.m"/> 
-     <header-file src="src/ios/wrapper/OSSTestMacros.h" />
+     <header-file src="src/ios/wrapper/OSSMacros.h" />
      <header-file src="src/ios/wrapper/OSSWrapper.h" />  
      <source-file src="src/ios/wrapper/OSSWrapper.m"/> 
     
