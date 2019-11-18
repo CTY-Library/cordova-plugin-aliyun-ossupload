@@ -81,7 +81,7 @@ public class FileUpload extends CordovaPlugin {
 
     @Override
     public boolean execute(String action, JSONArray args,final CallbackContext callbackContext) throws JSONException {
-        if (action.equals("onOssNormalPut")) {
+        if (action.equals("putObject")) {
             String data = args.getString(0);
             String endPoint = args.getString(1);
             String bucket = args.getString(2);
@@ -137,6 +137,7 @@ public class FileUpload extends CordovaPlugin {
             callbackContext.error("Expected one non-empty string argument localFile.");
             return;
         }
+        final Date currentTime1 = new Date();
         final SimpleDateFormat date1 = new SimpleDateFormat("初始化开始:yyyy年MM月dd日：HH:mm:ss---SSS(毫秒)");
         // 构造上传请求
         OSSCredentialProvider credentialProvider = new OSSAuthCredentialsProvider("") {
@@ -182,7 +183,7 @@ public class FileUpload extends CordovaPlugin {
                 }
             });
         }
-        final Date currentTime = new Date();
+        final Date currentTime2 = new Date();
         final SimpleDateFormat date2 = new SimpleDateFormat("初始化结束:yyyy年MM月dd日：HH:mm:ss---SSS(毫秒)");
         // 异步上传时可以设置进度回调
         put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
@@ -191,12 +192,14 @@ public class FileUpload extends CordovaPlugin {
                 int progress = (int) (100 * currentSize / totalSize);
             }
         });
+        final Date currentTime3 = new Date();
         final SimpleDateFormat date_up1 = new SimpleDateFormat(" 上传开始:yyyy年MM月dd日：HH:mm:ss---SSS(毫秒) ");
         OSSAsyncTask task = oss.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
             @Override
             public void onSuccess(PutObjectRequest request, PutObjectResult result) {
+                final Date currentTime4 = new Date();
                 final SimpleDateFormat date_up2 = new SimpleDateFormat(" 上传结束:yyyy年MM月dd日：HH:mm:ss---SSS(毫秒) ");
-                callbackContext.success("success"+date1.format(currentTime)+date2.format(currentTime)+ date_up1.format(currentTime) + date_up2.format(currentTime) );
+                callbackContext.success("success"+date1.format(currentTime1)+date2.format(currentTime2)+ date_up1.format(currentTime3) + date_up2.format(currentTime4) );
             }
 
             @Override
