@@ -39,8 +39,9 @@
 {
     NSString* objectKey = [command.arguments objectAtIndex:0];
     NSString* bucket =    [command.arguments objectAtIndex:1];
+    NSString* objectDownLoadKey =    [command.arguments objectAtIndex:2];
 
-    [self.oss asyncGetImage:objectKey oss_bucket_private:bucket success:^(id result) {
+    [self.oss asyncGetImage:objectKey objectDownLoadKey:objectDownLoadKey oss_bucket_private:bucket success:^(id result) {
        //返回结果
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"success"];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];

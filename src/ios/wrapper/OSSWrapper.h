@@ -36,6 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param failure failure block
  */
 - (void)asyncGetImage:(NSString *)objectKey
+objectDownLoadKey:(NSString *)objectDownLoadKey
         oss_bucket_private:(NSString *)oss_bucket_private
               success:(void (^_Nullable)(id))success
               failure:(void (^_Nullable)(NSError*))failure;

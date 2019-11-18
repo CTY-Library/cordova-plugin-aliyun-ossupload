@@ -24,14 +24,14 @@ NSString * const font = @"d3F5LXplbmhlaQ==";
 
 @implementation OSSWrapper
 
-- (void)asyncGetImage:(NSString *)objectKey oss_bucket_private:(NSString *)oss_bucket_private success:(void (^)(id _Nullable))success failure:(void (^)(NSError * _Nonnull))failure {
+- (void)asyncGetImage:(NSString *)objectKey objectDownLoadKey:(NSString *)objectDownLoadKey oss_bucket_private:(NSString *)oss_bucket_private success:(void (^)(id _Nullable))success failure:(void (^)(NSError * _Nonnull))failure {
     if (![objectKey oss_isNotEmpty]) {
         NSError *error = [NSError errorWithDomain:NSInvalidArgumentException code:0 userInfo:@{NSLocalizedDescriptionKey: @"objectKey should not be nil"}];
         failure(error);
         return;
     }
     
-    NSString *downloadFilePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:objectKey];
+    NSString *downloadFilePath = [[NSString oss_documentDirectory] stringByAppendingPathComponent:objectDownLoadKey];
     
     _normalDloadRequest = [OSSGetObjectRequest new];
     _normalDloadRequest.bucketName = oss_bucket_private;
