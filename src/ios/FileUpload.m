@@ -172,7 +172,7 @@
     bzero(keyPtr, sizeof(keyPtr));
     [key getCString:keyPtr maxLength:sizeof(keyPtr) encoding:NSUTF8StringEncoding];
     NSUInteger dataLength = data.length;
-    size_t bufferSize = dataLength + kCCBlockSizeAES128+16;
+    size_t bufferSize = dataLength + kCCBlockSizeAES128+16; //因为key的长度为32,kCCBlockSizeAES128的长度为16,还需加16
     void *buffer = malloc(bufferSize);
     size_t numBytesdecrypted = 0;
     CCCryptorStatus cryptStatus = CCCrypt(kCCDecrypt, kCCAlgorithmAES128,
