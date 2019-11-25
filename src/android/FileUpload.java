@@ -149,6 +149,8 @@ public class FileUpload extends CordovaPlugin {
 
         try {
             mAuthData = this.aesDecrypt(data, mkey);
+            JSONObject jsonObj_point = new JSONObject(mAuthData);
+            mEndpoint =  jsonObj_point.getString("Endpoint");
         } catch (Exception e) {
             callbackContext.error(e.toString());
             return;
@@ -159,8 +161,7 @@ public class FileUpload extends CordovaPlugin {
             callbackContext.error("Expected one non-empty string argument localFile.");
             return;
         }
-        final Date currentTime1 = new Date();
-        final SimpleDateFormat date1 = new SimpleDateFormat("初始化开始:yyyy年MM月dd日：HH:mm:ss---SSS(毫秒)");
+         
         // 构造上传请求
         OSSCredentialProvider credentialProvider = new OSSAuthCredentialsProvider("") {
             @Override
