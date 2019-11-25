@@ -32,7 +32,7 @@ this.xxxx.getOSSToken({},false).then(result => {
 
 try{
 
-    aliyunOSSupload.putObject(
+    aliyunOSSupload.onOssNormalPut(
     
     (e) => {_this.onSuccess(e)},
     
