@@ -55,11 +55,10 @@
 //普通上传
 - (void)onOssNormalPut:(CDVInvokedUrlCommand*)command
 {
-    NSString* str_data = [command.arguments objectAtIndex:0]; 
-    endPoint =  [command.arguments objectAtIndex:1];
-    NSString* bucket =    [command.arguments objectAtIndex:2];
-    objectKey =  [command.arguments objectAtIndex:3];
-    uploadFilePath = [command.arguments objectAtIndex:4];
+    NSString* str_data = [command.arguments objectAtIndex:0];
+    NSString* bucket =    [command.arguments objectAtIndex:1];
+    objectKey =  [command.arguments objectAtIndex:2];
+    uploadFilePath = [command.arguments objectAtIndex:3];
     
     [self initDefaultClient:str_data];//初始化连接
     
@@ -141,6 +140,7 @@
         NSString* AccessKeySecret = [object objectForKey:@"AccessKeySecret"];
         NSString* SecurityToken = [object objectForKey:@"SecurityToken"];
         NSString* Expiration = [object objectForKey:@"Expiration"];
+        endPoint = [object objectForKey:@"Endpoint"];
         // 针对只有一个region下bucket的数据上传下载操作时,可以将client实例给App单例持有。
         id<OSSCredentialProvider> credentialProvider = [[OSSAuthCredentialProvider alloc] initWithAuthServerUrl:AccessKeyId  AccessKeySecret:AccessKeySecret SecurityToken:SecurityToken Expiration:Expiration];
         OSSClientConfiguration *cfg = [[OSSClientConfiguration alloc] init];

@@ -55,6 +55,7 @@ import java.text.SimpleDateFormat;
 public class FileUpload extends CordovaPlugin {
     private String mkey = "";
     private String mAuthData = "";
+    private String mEndpoint = "";    
 
     /**
      * Called after plugin construction and fields have been initialized. Prefer to
@@ -81,14 +82,35 @@ public class FileUpload extends CordovaPlugin {
 
     @Override
     public boolean execute(String action, JSONArray args,final CallbackContext callbackContext) throws JSONException {
-        if (action.equals("putObject")) {
+        //普通上传
+        if (action.equals("onOssNormalPut")) {
             String data = args.getString(0);
-            String endPoint = args.getString(1);
-            String bucket = args.getString(2);
-            String object = args.getString(3);
-            String localFile = args.getString(4);
-            this.asyncPutObject(data, endPoint, bucket, object, localFile, null, callbackContext);
+            //String endPoint = args.getString(1);
+            String bucket = args.getString(1);
+            String object = args.getString(2);
+            String localFile = args.getString(3);
+            this.asyncPutObject(data, bucket, object, localFile, null, callbackContext);
             return true;
+        }
+        //普通下载
+        else if (action.equals("onOssNormalGet")) {
+            
+            return false;
+        }
+        //取消上传/下载任务 onOssNormalCancel
+        else if (action.equals("onOssNormalCancel")) {
+            
+            return false;
+        }
+        //图片缩放
+        else if (action.equals("onOssImgResize")) {
+            
+            return false;
+        }
+        //图片水印
+        else if (action.equals("onOssWatermark")) {
+            
+            return false;
         }
         return false;
     }
@@ -101,19 +123,19 @@ public class FileUpload extends CordovaPlugin {
         byte[] bytes = Base64.decode(str.getBytes("utf-8"));
         bytes = cipher.doFinal(bytes);
         return new String(bytes, "utf-8");
-    }
+    }    
 
-    private void asyncPutObject(String data, String endPoint, String bucket, String object, String localFile,
+    private void asyncPutObject(String data, String bucket, String object, String localFile,
            final String callbackAddress,final CallbackContext callbackContext) {
         if (data.equals("")) {
             callbackContext.error("Expected one non-empty string argument data.");
             return;
         }
 
-        if (endPoint.equals("")) {
-            callbackContext.error("Expected one non-empty string argument endPoint.");
-            return;
-        }
+        // if (endPoint.equals("")) {
+        //     callbackContext.error("Expected one non-empty string argument endPoint.");
+        //     return;
+        // }
 
         if (bucket.equals("")) {
             callbackContext.error("Expected one non-empty string argument bucket.");
@@ -153,6 +175,7 @@ public class FileUpload extends CordovaPlugin {
                         String sk = jsonObj.getString("AccessKeySecret");
                         String token = jsonObj.getString("SecurityToken");
                         String expiration = jsonObj.getString("Expiration");
+                        mEndpoint =  jsonObj.getString("Endpoint");
                         authToken = new OSSFederationToken(ak, sk, token, expiration);
                     } else {
                         String errorCode = jsonObj.getString("ErrorCode");
@@ -170,7 +193,7 @@ public class FileUpload extends CordovaPlugin {
         conf.setSocketTimeout(15 * 1000); // socket超时，默认15秒
         conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
         conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
-        OSS oss = new OSSClient(this.cordova.getActivity().getApplicationContext(), endPoint, credentialProvider, conf);
+        OSS oss = new OSSClient(this.cordova.getActivity().getApplicationContext(), mEndpoint, credentialProvider, conf);
         PutObjectRequest put = new PutObjectRequest(bucket, object, localFile);
         put.setCRC64(OSSRequest.CRC64Config.YES);
         if (callbackAddress != null) {
@@ -182,9 +205,7 @@ public class FileUpload extends CordovaPlugin {
                     put("callbackBody", "filename=${object}");
                 }
             });
-        }
-        final Date currentTime2 = new Date();
-        final SimpleDateFormat date2 = new SimpleDateFormat("初始化结束:yyyy年MM月dd日：HH:mm:ss---SSS(毫秒)");
+        }    
         // 异步上传时可以设置进度回调
         put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
             @Override
@@ -192,14 +213,10 @@ public class FileUpload extends CordovaPlugin {
                 int progress = (int) (100 * currentSize / totalSize);
             }
         });
-        final Date currentTime3 = new Date();
-        final SimpleDateFormat date_up1 = new SimpleDateFormat(" 上传开始:yyyy年MM月dd日：HH:mm:ss---SSS(毫秒) ");
         OSSAsyncTask task = oss.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
             @Override
-            public void onSuccess(PutObjectRequest request, PutObjectResult result) {
-                final Date currentTime4 = new Date();
-                final SimpleDateFormat date_up2 = new SimpleDateFormat(" 上传结束:yyyy年MM月dd日：HH:mm:ss---SSS(毫秒) ");
-                callbackContext.success("success"+date1.format(currentTime1)+date2.format(currentTime2)+ date_up1.format(currentTime3) + date_up2.format(currentTime4) );
+            public void onSuccess(PutObjectRequest request, PutObjectResult result) {                
+                callbackContext.success("success");
             }
 
             @Override

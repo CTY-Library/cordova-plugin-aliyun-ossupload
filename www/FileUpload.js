@@ -9,14 +9,12 @@ exports.onOssNormalPut = function(
   success,
   error,
   dataToken,
-  endPoint,
   bucket,
   object,
   localFile
 ) {
   exec(success, error, 'FileUpload', 'onOssNormalPut', [
-    dataToken,
-    endPoint,
+    dataToken,  
     bucket,
     object,
     localFile
@@ -29,14 +27,12 @@ exports.onOssNormalGet = function(
   success,
   error,
   dataToken,
-  endPoint,
   bucket,
   object,
   objectDownLoadKey
 ) {
   exec(success, error, 'FileUpload', 'onOssNormalGet', [
-    dataToken,
-    endPoint,
+    dataToken,  
     bucket,
     object,
     objectDownLoadKey
@@ -59,7 +55,6 @@ exports.onOssImgResize = function(
   success,
   error,
   dataToken,
-  endPoint,
   bucket,
   object,
   width,
@@ -67,7 +62,6 @@ exports.onOssImgResize = function(
 ) {
   exec(success, error, 'FileUpload', 'onOssImgResize', [
     dataToken,
-    endPoint,
     bucket,
     object,
     width,
@@ -79,8 +73,7 @@ exports.onOssImgResize = function(
 exports.onOssWatermark = function(
   success,
   error,
-  dataToken,
-  endPoint,
+  dataToken,  
   bucket,
   object,
   waterMark,
@@ -88,7 +81,6 @@ exports.onOssWatermark = function(
 ) {
   exec(success, error, 'FileUpload', 'onOssWatermark', [
     dataToken,
-    endPoint,
     bucket,
     object,
     waterMark,
