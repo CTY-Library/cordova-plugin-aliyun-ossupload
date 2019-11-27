@@ -58,14 +58,16 @@ exports.onOssImgResize = function(
   bucket,
   object,
   width,
-  height
+  height,
+  objectDownLoadKey
 ) {
   exec(success, error, 'FileUpload', 'onOssImgResize', [
     dataToken,
     bucket,
     object,
     width,
-    height
+    height,
+    objectDownLoadKey
   ]);
 };
 
@@ -77,13 +79,15 @@ exports.onOssWatermark = function(
   bucket,
   object,
   waterMark,
-  size
+  size,
+  objectDownLoadKey
 ) {
   exec(success, error, 'FileUpload', 'onOssWatermark', [
     dataToken,
     bucket,
     object,
     waterMark,
-    size
+    size,
+    objectDownLoadKey
   ]);
 };

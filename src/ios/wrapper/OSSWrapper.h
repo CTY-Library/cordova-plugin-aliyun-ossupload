@@ -75,6 +75,7 @@ objectDownLoadKey:(NSString *)objectDownLoadKey
  *    @param     size     font size
  */
 - (void)textWaterMark:(NSString *)object
+            objectDownLoadKey : (NSString *)objectDownLoadKey
             oss_bucket_private:(NSString *)oss_bucket_private
             waterText:(NSString *)text
             objectSize:(int)size
@@ -89,7 +90,8 @@ objectDownLoadKey:(NSString *)objectDownLoadKey
  *    @param     height    height
  */
 - (void)reSize:(NSString *) object
-        oss_bucket_private:(NSString *)oss_bucket_private
+    objectDownLoadKey : (NSString *)objectDownLoadKey
+    oss_bucket_private:(NSString *)oss_bucket_private
       picWidth:(int) width
      picHeight:(int) height
        success:(void (^_Nullable)(id))success

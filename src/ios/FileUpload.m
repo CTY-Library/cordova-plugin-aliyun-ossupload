@@ -82,10 +82,11 @@
     NSString* bucket =    [command.arguments objectAtIndex:1];
     NSString* str_width = [command.arguments objectAtIndex:2];
     NSString* str_height =    [command.arguments objectAtIndex:3];
+    NSString* objectDownLoadKey =  [command.arguments objectAtIndex:4];
     int width = [str_width intValue];
     int height = [str_height intValue];
     
-    [self.oss reSize:objectKey oss_bucket_private:bucket picWidth:width picHeight:height success:^(id result) {
+    [self.oss reSize:objectKey objectDownLoadKey:objectDownLoadKey oss_bucket_private:bucket picWidth:width picHeight:height success:^(id result) {
         NSString *filePath = (NSString *)result;
         //返回结果
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: filePath];
@@ -103,9 +104,10 @@
     NSString* bucket =    [command.arguments objectAtIndex:1];
     NSString * waterMark =  [command.arguments objectAtIndex:2];
     NSString* str_size =    [command.arguments objectAtIndex:3];
+    NSString* objectDownLoadKey =  [command.arguments objectAtIndex:4];
     int size = [str_size intValue];
    
-    [self.oss textWaterMark:objectKey oss_bucket_private:bucket waterText:waterMark objectSize:size success:^(id result) {
+    [self.oss textWaterMark:objectKey objectDownLoadKey:objectDownLoadKey  oss_bucket_private:bucket waterText:waterMark objectSize:size success:^(id result) {
         //返回结果
         NSString *filePath = (NSString *)result;
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: filePath];

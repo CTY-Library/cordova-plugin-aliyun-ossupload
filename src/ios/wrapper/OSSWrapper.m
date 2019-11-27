@@ -166,7 +166,7 @@ NSString * const font = @"d3F5LXplbmhlaQ==";
     });
 }
 
-- (void)textWaterMark:(NSString *)object  oss_bucket_private:(NSString *)oss_bucket_private  waterText:(NSString *)text objectSize:(int)size success:(void (^)(id _Nonnull))success failure:(void (^)(NSError * _Nonnull))failure {
+- (void)textWaterMark:(NSString *)object objectDownLoadKey : (NSString *)objectDownLoadKey oss_bucket_private:(NSString *)oss_bucket_private  waterText:(NSString *)text objectSize:(int)size success:(void (^)(id _Nonnull))success failure:(void (^)(NSError * _Nonnull))failure {
     NSString * base64Text = [OSSUtil calBase64WithData:(UTF8Char*)[text cStringUsingEncoding:NSASCIIStringEncoding]];
     NSString * queryString = [NSString stringWithFormat:@"@watermark=2&type=%@&text=%@&size=%d",
                               font, base64Text, size];
@@ -174,16 +174,16 @@ NSString * const font = @"d3F5LXplbmhlaQ==";
     NSLog(@"Text: %@", text);
     NSLog(@"QueryString: %@", queryString);
     NSLog(@"%@%@", object, queryString);
-    [self asyncGetImage:[NSString stringWithFormat:@"%@%@", object, queryString] oss_bucket_private:oss_bucket_private success:success failure:failure];
+    [self asyncGetImage:[NSString stringWithFormat:@"%@%@", object, queryString] objectDownLoadKey : objectDownLoadKey oss_bucket_private:oss_bucket_private success:success failure:failure];
 }
 
-- (void)reSize:(NSString *)object  oss_bucket_private:(NSString *)oss_bucket_private  picWidth:(int)width picHeight:(int)height success:(void (^)(id _Nonnull))success failure:(void (^)(NSError * _Nonnull))failure {
+- (void)reSize:(NSString *)object objectDownLoadKey : (NSString *)objectDownLoadKey  oss_bucket_private:(NSString *)oss_bucket_private  picWidth:(int)width picHeight:(int)height success:(void (^)(id _Nonnull))success failure:(void (^)(NSError * _Nonnull))failure {
     NSString * queryString = [NSString stringWithFormat:@"@%dw_%dh_1e_1c", width, height];
     NSLog(@"ResizeImage: %@", object);
     NSLog(@"Width: %d", width);
     NSLog(@"Height: %d", height);
     NSLog(@"QueryString: %@", queryString);
-    [self asyncGetImage:[NSString stringWithFormat:@"%@%@", object, queryString] oss_bucket_private:oss_bucket_private success:success failure:failure];
+    [self asyncGetImage:[NSString stringWithFormat:@"%@%@", object, queryString] objectDownLoadKey : objectDownLoadKey oss_bucket_private:oss_bucket_private success:success failure:failure];
 }
 
 @end
