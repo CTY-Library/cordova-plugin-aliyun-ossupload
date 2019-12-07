@@ -3,7 +3,9 @@ package com.plugin.aliyun;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.os.Environment;
 import android.util.Log;
 
 import org.apache.cordova.CordovaInterface;
@@ -67,6 +69,8 @@ public class FileUpload extends CordovaPlugin {
   private String mEndpoint = "";
   //字体，默认文泉驿正黑，可以根据文档自行更改
   private static final String font = "d3F5LXplbmhlaQ==";
+  private static Context context_all;
+  private String appName;
   /**
    * Called after plugin construction and fields have been initialized. Prefer to
    * use pluginInitialize instead since there is no value in having parameters on
@@ -79,7 +83,7 @@ public class FileUpload extends CordovaPlugin {
   public void initialize(CordovaInterface cordova, CordovaWebView webView) {
     super.initialize(cordova, webView);
     Context context = this.cordova.getActivity().getApplicationContext();
-
+    context_all = context;
     ApplicationInfo applicationInfo = null;
     try {
       applicationInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(),
@@ -106,7 +110,7 @@ public class FileUpload extends CordovaPlugin {
         String data = args.getString(0);
         String bucket = args.getString(1);
         String object = args.getString(2);
-        String objectDownLoadKey = args.getString(3);
+        String objectDownLoadKey = args.getString(3); // 例如:  123.mp3
         this.onOssNormalGet(data, bucket, object, objectDownLoadKey, null, callbackContext);
         return true;
     }
@@ -267,6 +271,7 @@ public class FileUpload extends CordovaPlugin {
 //          mDisplayer.displayInfo("Bucket: " + mBucket + "\nObject: " + request.getObjectKey() + "\nRequestId: " + result.getRequestId());
         } catch (IOException e) {
           e.printStackTrace();
+          callbackContext.error("文件存储异常:"+e.getMessage()); //失败
         }
       }
 
@@ -278,6 +283,7 @@ public class FileUpload extends CordovaPlugin {
           // 本地异常如网络异常等
           clientExcepion.printStackTrace();
           info = clientExcepion.toString();
+          callbackContext.error("本地异常如网络异常等:"+info); //失败
         }
         if (serviceException != null) {
           // 服务异常
@@ -286,6 +292,7 @@ public class FileUpload extends CordovaPlugin {
           Log.e("HostId", serviceException.getHostId());
           Log.e("RawMessage", serviceException.getRawMessage());
           info = serviceException.toString();
+          callbackContext.error("服务异常::"+info); //失败
         }
 //        mDisplayer.downloadFail(info);
 //        mDisplayer.displayInfo(info);
@@ -293,10 +300,23 @@ public class FileUpload extends CordovaPlugin {
     });
   }
   public static void SaveFile(InputStream is,String fileName) throws IOException{
+    Resources appResource = context_all.getResources();
+    String appName = appResource.getText(appResource.getIdentifier("app_name", "string", context_all.getPackageName())).toString();
+    String state = Environment.getExternalStorageState();
+    File directory = null;
+    if(Environment.MEDIA_MOUNTED.equals(state)){
+      directory = context_all.getExternalFilesDir(appName);
+    }else{
+      directory = context_all.getFilesDir();
+    }
+    if(!directory.exists()){
+      directory.mkdir();
+    }
+    File mp3File = new File(directory, String.valueOf(fileName));
     BufferedInputStream in=null;
     BufferedOutputStream out=null;
     in=new BufferedInputStream(is);
-    out=new BufferedOutputStream(new FileOutputStream(fileName));
+    out=new BufferedOutputStream(new FileOutputStream(mp3File));
     int len=-1;
     byte[] b=new byte[1024];
     while((len=in.read(b))!=-1){
