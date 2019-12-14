@@ -1,6 +1,6 @@
 var exec = require('cordova/exec');
 
-var aliyunOSSuploads = {
+var aliyunOSSupload = {
   //上传  
   onOssNormalPut : function(
     success,
@@ -24,12 +24,12 @@ var aliyunOSSuploads = {
     exec(success, error, 'FileUpload', 'onOssNormalGet', [dataToken,bucket,object,objectDownLoadKey]);
   },
   //取消上传/下载任务
-  // onOssNormalCancel : function(
-  //   success,
-  //   error,
-  // ) {
-  //   exec(success, error, 'FileUpload', 'onOssNormalCancel', []);
-  // },
+  onOssNormalCancel : function(
+    success,
+    error
+  ) {
+    exec(success, error, 'FileUpload', 'onOssNormalCancel', []);
+  },
   //图片缩放
   onOssImgResize : function(
     success,
@@ -58,6 +58,6 @@ var aliyunOSSuploads = {
   }
 }
 
-module.exports = aliyunOSSuploads
+module.exports = aliyunOSSupload
 
  
