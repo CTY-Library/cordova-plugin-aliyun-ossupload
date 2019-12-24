@@ -40,7 +40,8 @@
       <preference name="secret_key" value="$SECRETKEY"/>
     </config-file>  
      <!-- 依赖库 -->
-    <framework src="libresolv.9.tbd" weak="true"/>  
+    <framework src="Photos.framework" weak="true"/> 
+    <framework src="libresolv.9.tbd" weak="true"/> 
     <framework src="src/ios/lib/AliyunOSSiOS.framework" custom="true"/>
   
      <!-- 源文件 -->
@@ -52,6 +53,10 @@
      <header-file src="src/ios/wrapper/OSSMacros.h" />
      <header-file src="src/ios/wrapper/OSSWrapper.h" />  
      <source-file src="src/ios/wrapper/OSSWrapper.m"/> 
+
+     <config-file parent="NSPhotoLibraryUsageDescription" target="*-Info.plist">
+            <string>允许保存图片到您的手机相册?</string>
+     </config-file>
     
   </platform> 
 

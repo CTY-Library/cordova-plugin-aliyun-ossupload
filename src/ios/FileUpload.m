@@ -2,13 +2,14 @@
 
 #import <Cordova/CDV.h>
 #import <AliyunOSSiOS/OSSService.h>
+#import <Photos/Photos.h>
 #import "OSSManager.h"
 #import "OSSWrapper.h"
 
 #import <Foundation/Foundation.h>
 #import <CommonCrypto/CommonCrypto.h>
 
-  //  @property (nonatomic, strong) OSSWrapper *oss;
+//  @property (nonatomic, strong) OSSWrapper *oss;
 
 @interface FileUpload : CDVPlugin {
     NSString *uploadFilePath;//上传文件的路径
@@ -19,7 +20,7 @@
     CDVPluginResult* pluginResult;
 }
 
-    @property (nonatomic, strong) OSSWrapper *oss;
+@property (nonatomic, strong) OSSWrapper *oss;
 
 - (void)putObject:(CDVInvokedUrlCommand*)command;
 @end
@@ -32,25 +33,53 @@
     [self setupOSS];
     //[OSSLog enableLog];     // 开启sdk的日志功能
 }
- 
 
-// 普通下载
+// 从网络下载图片,保存图片到手机相册
 - (void)onOssNormalGet:(CDVInvokedUrlCommand *)command
 {
-    NSString* objectKey = [command.arguments objectAtIndex:0];
-    NSString* bucket =    [command.arguments objectAtIndex:1];
-    NSString* objectDownLoadKey =    [command.arguments objectAtIndex:2];
+    NSString* urlString = [command.arguments objectAtIndex:0];
+    NSURL *url = [NSURL URLWithString: urlString];
+    
+    NSData *data = [NSData dataWithContentsOfURL:url];
 
-    [self.oss asyncGetImage:objectKey objectDownLoadKey:objectDownLoadKey oss_bucket_private:bucket success:^(id result) {
-       //返回结果
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"success"];
-        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-    } failure:^(NSError *error) {
-        //返回结果
-         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:error.localizedDescription];
-         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    UIImage *img = [UIImage imageWithData:data];
+
+    [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+         //写入图片到相册
+         PHAssetChangeRequest *req = [PHAssetChangeRequest creationRequestForAssetFromImage:img];
+     } completionHandler:^(BOOL success, NSError * _Nullable error) {
+         NSLog(@"success = %d, error = %@", success, error);
+          pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:error.localizedDescription];
+          [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }];
+   
+    //返回结果
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"success"];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    
 }
+
+
+// 普通下载
+//- (void)onOssNormalGet:(CDVInvokedUrlCommand *)command
+//{
+//    NSString* str_data = [command.arguments objectAtIndex:0];
+//    NSString* bucket =    [command.arguments objectAtIndex:1];
+//    NSString* objectKey = [command.arguments objectAtIndex:2];
+//    NSString* objectDownLoadKey =    [command.arguments objectAtIndex:3];
+//
+//    [self initDefaultClient:str_data];//初始化连接
+//
+//    [self.oss asyncGetImage:objectKey objectDownLoadKey:objectDownLoadKey oss_bucket_private:bucket success:^(id result) {
+//       //返回结果
+//        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"success"];
+//        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+//    } failure:^(NSError *error) {
+//        //返回结果
+//         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:error.localizedDescription];
+//         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+//    }];
+//}
 
 //普通上传
 - (void)onOssNormalPut:(CDVInvokedUrlCommand*)command
