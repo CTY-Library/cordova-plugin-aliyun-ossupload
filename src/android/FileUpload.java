@@ -13,6 +13,7 @@ import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CallbackContext;
 
 import org.apache.cordova.CordovaWebView;
+import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -413,12 +414,21 @@ public class FileUpload extends CordovaPlugin {
       @Override
       public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
         int progress = (int) (100 * currentSize / totalSize);
+       // callbackContext.success(progress);
+       PluginResult pluginResult = new PluginResult(PluginResult.Status.OK,"progress:"+progress
+       );
+pluginResult.setKeepCallback(true);
+callbackContext.sendPluginResult(pluginResult);
       }
     });
     OSSAsyncTask task = oss.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
       @Override
       public void onSuccess(PutObjectRequest request, PutObjectResult result) {
-        callbackContext.success("success");
+       // callbackContext.success("success");
+       PluginResult pluginResult = new PluginResult(PluginResult.Status.OK,"success"
+       );
+//pluginResult.setKeepCallback(true);
+callbackContext.sendPluginResult(pluginResult);
       }
 
       @Override
