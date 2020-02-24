@@ -72,6 +72,7 @@ public class FileUpload extends CordovaPlugin {
   private static final String font = "d3F5LXplbmhlaQ==";
   private static Context context_all;
   private String appName;
+  private int old_prg = 0;
   /**
    * Called after plugin construction and fields have been initialized. Prefer to
    * use pluginInitialize instead since there is no value in having parameters on
@@ -99,6 +100,7 @@ public class FileUpload extends CordovaPlugin {
   public boolean execute(String action, JSONArray args,final CallbackContext callbackContext) throws JSONException {
     //普通上传
     if (action.equals("onOssNormalPut")) {
+      old_prg = 0;
       String data = args.getString(0);
       String bucket = args.getString(1);
       String object = args.getString(2);
@@ -108,6 +110,7 @@ public class FileUpload extends CordovaPlugin {
     }
     //普通下载
     else if (action.equals("onOssNormalGet")) {
+        old_prg = 0;
         String data = args.getString(0);
         String bucket = args.getString(1);
         String object = args.getString(2);
@@ -219,9 +222,12 @@ public class FileUpload extends CordovaPlugin {
        int progress = (int) (100 * currentSize / totalSize);
 //        mDisplayer.updateProgress(progress);
 //        mDisplayer.displayInfo("下载进度: " + String.valueOf(progress) + "%");
-        PluginResult pluginResult = new PluginResult(PluginResult.Status.OK,"progress:"+progress);
-        pluginResult.setKeepCallback(true);
-        callbackContext.sendPluginResult(pluginResult);
+        if(old_prg != progress) {
+          old_prg = progress;
+          PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "progress:" + progress);
+          pluginResult.setKeepCallback(true);
+          callbackContext.sendPluginResult(pluginResult);
+        }
       }
     });
     OSSLog.logDebug("asyncGetObject");
@@ -421,9 +427,12 @@ public class FileUpload extends CordovaPlugin {
       public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
         int progress = (int) (100 * currentSize / totalSize);
        // callbackContext.success(progress);
-       PluginResult pluginResult = new PluginResult(PluginResult.Status.OK,"progress:"+progress);
-       pluginResult.setKeepCallback(true);
-       callbackContext.sendPluginResult(pluginResult);
+        if(old_prg != progress) {
+          old_prg = progress;
+          PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "progress:" + progress);
+          pluginResult.setKeepCallback(true);
+          callbackContext.sendPluginResult(pluginResult);
+        }
       }
     });
     OSSAsyncTask task = oss.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
