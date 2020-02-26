@@ -61,6 +61,12 @@ import org.bouncycastle.util.encoders.Base64;
 
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.concurrent.CountDownLatch;
+
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
+
 /**
  * This class echoes a string called from JavaScript.
  */
@@ -118,13 +124,13 @@ public class FileUpload extends CordovaPlugin {
         this.onOssNormalGet(data, bucket, object, objectDownLoadKey, null, callbackContext);
         return true;
     }
-    //取消上传/下载任务 onOssNormalCancel
+    //取消上传任务
     else if (action.equals("onOssNormalCancel")) {
       String data = args.getString(0);
       String bucket = args.getString(1);
       String object = args.getString(2);
       String objectDownLoadKey = args.getString(3);
-      this.onOssNormalGet(data, bucket, object, objectDownLoadKey, null, callbackContext);
+      this.CancelPutObject(data, bucket, object, objectDownLoadKey, null, callbackContext);
       return true;
     }
     //图片缩放
@@ -150,6 +156,84 @@ public class FileUpload extends CordovaPlugin {
       return true;
     }
     return false;
+  }
+
+  //取消上传
+  public void CancelPutObject(String data, String mBucket, String object,String objectDownLoadKey, final String callbackAddress,final CallbackContext callbackContext)   {
+    try {
+      final CountDownLatch latch = new CountDownLatch(1);
+      PutObjectRequest put = new PutObjectRequest(mBucket, object, objectDownLoadKey);
+      put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
+        @Override
+        public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
+          OSSLog.logDebug("[testPutObjectCancel] - " + currentSize + " " + totalSize, false);
+          if (currentSize > totalSize / 2) {
+            latch.countDown();
+          }
+        }
+      });
+
+      // 构造上传请求
+      OSSCredentialProvider credentialProvider = new OSSAuthCredentialsProvider("") {
+        @Override
+        public OSSFederationToken getFederationToken() throws ClientException {
+          OSSFederationToken authToken;
+          try {
+
+            JSONObject jsonObj = new JSONObject(mAuthData);
+            int statusCode = jsonObj.getInt("StatusCode");
+            if (statusCode == 200) {
+              String ak = jsonObj.getString("AccessKeyId");
+              String sk = jsonObj.getString("AccessKeySecret");
+              String token = jsonObj.getString("SecurityToken");
+              String expiration = jsonObj.getString("Expiration");
+              mEndpoint = jsonObj.getString("Endpoint");
+              authToken = new OSSFederationToken(ak, sk, token, expiration);
+            } else {
+              String errorCode = jsonObj.getString("ErrorCode");
+              String errorMessage = jsonObj.getString("ErrorMessage");
+              throw new ClientException("ErrorCode: " + errorCode + "| ErrorMessage: " + errorMessage);
+            }
+            return authToken;
+          } catch (Exception e) {
+            throw new ClientException(e);
+          }
+        }
+      };
+
+      ClientConfiguration conf = new ClientConfiguration();
+      conf.setConnectionTimeout(15 * 1000); // 连接超时，默认15秒
+      conf.setSocketTimeout(15 * 1000); // socket超时，默认15秒
+      conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
+      conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
+      OSS oss = new OSSClient(this.cordova.getActivity().getApplicationContext(), mEndpoint, credentialProvider, conf);
+
+      OSSAsyncTask task = oss.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
+        @Override
+        public void onSuccess(PutObjectRequest request, PutObjectResult result) {
+        }
+
+        @Override
+        public void onFailure(PutObjectRequest request, ClientException clientExcepion,
+                              ServiceException serviceException) {
+        }
+      });
+      assertFalse(task.isCompleted());
+      latch.await();
+      assertFalse(task.isCompleted());
+      task.cancel();
+      task.waitUntilFinished();
+      assertTrue(task.isCompleted());
+      assertTrue(true);
+      ClientException clientException = new  ClientException();
+      assertNotNull(clientException);
+      callbackContext.success("success"); //成功回调
+    } catch (NumberFormatException e) {
+      throw new RuntimeException("Stub!");
+    }finally {
+      throw new RuntimeException("Stub!");
+    }
+
   }
 
   //图片缩放
