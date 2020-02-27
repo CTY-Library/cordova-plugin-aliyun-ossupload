@@ -160,6 +160,7 @@ public class FileUpload extends CordovaPlugin {
 
   //取消上传
   public void CancelPutObject(String data, String mBucket, String object,String objectDownLoadKey, final String callbackAddress,final CallbackContext callbackContext)   {
+    ClientException clientException = new  ClientException();
     try {
       final CountDownLatch latch = new CountDownLatch(1);
       PutObjectRequest put = new PutObjectRequest(mBucket, object, objectDownLoadKey);
@@ -224,14 +225,16 @@ public class FileUpload extends CordovaPlugin {
       task.cancel();
       task.waitUntilFinished();
       assertTrue(task.isCompleted());
-      assertTrue(true);
-      ClientException clientException = new  ClientException();
+
       assertNotNull(clientException);
+
+      assertTrue(true);
       callbackContext.success("success"); //成功回调
     } catch (NumberFormatException e) {
       throw new RuntimeException("Stub!");
     }finally {
-      throw new RuntimeException("Stub!");
+      callbackContext.success("success"); //成功回调
+      throw new RuntimeException(clientException);
     }
 
   }

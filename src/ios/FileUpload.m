@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CommonCrypto/CommonCrypto.h>
 
-//  @property (nonatomic, strong) OSSWrapper *oss;
+  //  @property (nonatomic, strong) OSSWrapper *oss;
 
 @interface FileUpload : CDVPlugin {
     NSString *uploadFilePath;//上传文件的路径
@@ -20,7 +20,7 @@
     CDVPluginResult* pluginResult;
 }
 
-@property (nonatomic, strong) OSSWrapper *oss;
+    @property (nonatomic, strong) OSSWrapper *oss;
 
 - (void)putObject:(CDVInvokedUrlCommand*)command;
 @end
@@ -52,7 +52,7 @@
           pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:error.localizedDescription];
           [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }];
-   
+    
     //返回结果
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"success"];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
@@ -91,9 +91,15 @@
     
     [self initDefaultClient:str_data];//初始化连接
     
-    [self.oss asyncPutImage: objectKey localFilePath:uploadFilePath oss_bucket_private:bucket success:^(id result) {
+    [self.oss asyncPutImage: objectKey localFilePath:uploadFilePath oss_bucket_private:bucket success:^(NSString* result) {
         //返回结果
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"success"];
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: result];
+        if([result isEqual:@"success"]){
+            [pluginResult setKeepCallbackAsBool:NO];
+        }
+        else{
+            [pluginResult setKeepCallbackAsBool:YES];
+        }
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
        //OSSLogDebug(@"上传文件 OK");
      } failure:^(NSError *error) {

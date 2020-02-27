@@ -38,8 +38,11 @@ NSString * const font = @"d3F5LXplbmhlaQ==";
     _normalDloadRequest.objectKey = objectKey;
     _normalDloadRequest.downloadToFileURL = [NSURL URLWithString:downloadFilePath];
     _normalDloadRequest.downloadProgress = ^(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
-        float progress = 1.f * totalBytesWritten / totalBytesExpectedToWrite;
+        float progress =( 1.f * totalBytesWritten / totalBytesExpectedToWrite ) * 100;
         OSSLogDebug(@"下载文件进度: %f", progress);
+        NSString *stringFloat = [NSString stringWithFormat:@"%f",round(progress)];
+        NSString *ret = [[NSString alloc] initWithFormat:@"%@%@", @"progress:" , stringFloat ];
+        success(ret);
     };
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -57,7 +60,7 @@ NSString * const font = @"d3F5LXplbmhlaQ==";
     });
 }
 
-- (void)asyncPutImage:(NSString *)objectKey localFilePath:(NSString *)filePath oss_bucket_private:(NSString *)oss_bucket_private  success:(void (^)(id _Nullable))success failure:(void (^)(NSError * _Nonnull))failure  {
+- (void)asyncPutImage:(NSString *)objectKey localFilePath:(NSString *)filePath oss_bucket_private:(NSString *)oss_bucket_private  success:(void (^)(NSString * _Nonnull))success failure:(void (^)(NSError * _Nonnull))failure  {
     if (![objectKey oss_isNotEmpty]) {
         NSError *error = [NSError errorWithDomain:NSInvalidArgumentException code:0 userInfo:@{NSLocalizedDescriptionKey: @"objectKey should not be nil"}];
         failure(error);
@@ -70,8 +73,12 @@ NSString * const font = @"d3F5LXplbmhlaQ==";
     _normalUploadRequest.uploadingFileURL = [NSURL fileURLWithPath:filePath];
     _normalUploadRequest.isAuthenticationRequired = YES;
     _normalUploadRequest.uploadProgress = ^(int64_t bytesSent, int64_t totalByteSent, int64_t totalBytesExpectedToSend) {
-        float progress = 1.f * totalByteSent / totalBytesExpectedToSend;
-        OSSLogDebug(@"上传文件进度: %f", progress);
+        int64_t progress = 100 * totalByteSent / totalBytesExpectedToSend;
+        OSSLogDebug(@"上传文件进度: %lld", progress);
+        NSString *stringFloat = [NSString stringWithFormat:@"%lld",progress];
+        NSString *ret = [[NSString alloc] initWithFormat:@"%@%@", @"progress:" , stringFloat ];
+        success(ret);
+        
     };
 //    _normalUploadRequest.callbackParam = @{
 //                                           @"callbackUrl": OSS_CALLBACK_URL,
@@ -85,15 +92,16 @@ NSString * const font = @"d3F5LXplbmhlaQ==";
                 if (task.error) {
                     failure(task.error);
                 } else {
-                    success(nil);
+                    success(@"success");
                 }
             });
             
             return nil;
         }];
     });
-} 
+}
 
+ 
 - (void)normalRequestCancel
 {
     if (_normalDloadRequest) {
