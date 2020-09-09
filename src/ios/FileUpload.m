@@ -93,19 +93,19 @@
     
     [self.oss asyncPutImage: objectKey localFilePath:uploadFilePath oss_bucket_private:bucket success:^(NSString* result) {
         //返回结果
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: result];
+        CDVPluginResult* pResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: result];
         if([result isEqual:@"success"]){
-            [pluginResult setKeepCallbackAsBool:NO];
+            [pResult setKeepCallbackAsBool:NO];
         }
         else{
-            [pluginResult setKeepCallbackAsBool:YES];
+            [pResult setKeepCallbackAsBool:YES];
         }
-        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        [self.commandDelegate sendPluginResult:pResult callbackId:command.callbackId];
        //OSSLogDebug(@"上传文件 OK");
      } failure:^(NSError *error) {
        //返回结果
-       pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:error.localizedDescription];
-       [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+       CDVPluginResult* pResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:error.localizedDescription];
+       [self.commandDelegate sendPluginResult:pResult callbackId:command.callbackId];
        //OSSLogDebug(@"上传文件 error");
      }];
 }
