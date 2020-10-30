@@ -63,9 +63,9 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.concurrent.CountDownLatch;
 
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
+//import static junit.framework.Assert.assertFalse;
+//import static junit.framework.Assert.assertNotNull;
+//import static junit.framework.Assert.assertTrue;
 
 /**
  * This class echoes a string called from JavaScript.
@@ -219,16 +219,16 @@ public class FileUpload extends CordovaPlugin {
                               ServiceException serviceException) {
         }
       });
-      assertFalse(task.isCompleted());
+      //assertFalse(task.isCompleted());
       latch.await();
-      assertFalse(task.isCompleted());
+      //assertFalse(task.isCompleted());
       task.cancel();
       task.waitUntilFinished();
-      assertTrue(task.isCompleted());
+      //assertTrue(task.isCompleted());
 
-      assertNotNull(clientException);
+      //assertNotNull(clientException);
 
-      assertTrue(true);
+      //assertTrue(true);
       callbackContext.success("success"); //成功回调
     } catch (NumberFormatException e) {
       throw new RuntimeException("Stub!");
