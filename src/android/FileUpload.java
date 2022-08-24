@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Environment;
+import android.util.Base64;
 import android.util.Log;
 
 import org.apache.cordova.CordovaInterface;
@@ -57,7 +58,7 @@ import java.util.HashMap;
 
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
-import org.bouncycastle.util.encoders.Base64;
+//import org.bouncycastle.util.encoders.Base64;
 
 import java.util.Date;
 import java.text.SimpleDateFormat;
@@ -250,7 +251,7 @@ public class FileUpload extends CordovaPlugin {
   //图片水印
   private void onOssWatermark(String data, String mBucket, String object, String waterMark, String size, final String objectDownLoadKey,
                               final String callbackAddress,final CallbackContext callbackContext) {
-    String base64Text = android.util.Base64.encodeToString(waterMark.getBytes(), android.util.Base64.URL_SAFE | android.util.Base64.NO_WRAP);
+    String base64Text = Base64.encodeToString(waterMark.getBytes(), Base64.URL_SAFE | Base64.NO_WRAP);
 
     String queryString = "@400w|watermark=2&type=" + font + "&text=" + base64Text + "&size=" + String.valueOf(size);
     onOssNormalGet(data, mBucket, object + queryString, objectDownLoadKey, null, callbackContext);
@@ -262,7 +263,7 @@ public class FileUpload extends CordovaPlugin {
       return null;
     Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
     cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key.getBytes("utf-8"), "AES"));
-    byte[] bytes = Base64.decode(str.getBytes("utf-8"));
+    byte[] bytes = Base64.decode(str.getBytes("utf-8"), Base64.DEFAULT);
     bytes = cipher.doFinal(bytes);
     return new String(bytes, "utf-8");
   }
