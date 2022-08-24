@@ -29,7 +29,6 @@
     </config-file>  
     <source-file src="src/android/FileUpload.java" target-dir="src/com/plugin/aliyun/FileUpload"/>  
     <framework src="com.aliyun.dpa:oss-android-sdk:+"/> 
-    <framework src="org.bouncycastle:bcpkix-jdk15on:1.60"/>
   </platform>  
 
   <platform name="ios"> 
