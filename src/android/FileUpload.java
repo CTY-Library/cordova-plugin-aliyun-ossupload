@@ -80,31 +80,24 @@ public class FileUpload extends CordovaPlugin {
   private static Context context_all;
   private String appName;
   private int old_prg = 0;
-  /**
-   * Called after plugin construction and fields have been initialized. Prefer to
-   * use pluginInitialize instead since there is no value in having parameters on
-   * the initialize() function.
-   *
-   * @param cordova
-   * @param webView
-   */
-  @Override
-  public void initialize(CordovaInterface cordova, CordovaWebView webView) {
-    super.initialize(cordova, webView);
-    Context context = this.cordova.getActivity().getApplicationContext();
-    context_all = context;
-    ApplicationInfo applicationInfo = null;
-    try {
-      applicationInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(),
-        PackageManager.GET_META_DATA);
-    } catch (PackageManager.NameNotFoundException e) {
-      e.printStackTrace();
-    }
-    mkey = applicationInfo.metaData.getString("com.plugin.aliyun.SECRET_KEY");
-  }
+
 
   @Override
   public boolean execute(String action, JSONArray args,final CallbackContext callbackContext) throws JSONException {
+    if(mkey.equals("")){
+      Context context = this.cordova.getActivity().getApplicationContext();
+      context_all = context;
+      ApplicationInfo applicationInfo = null;
+      try {
+        applicationInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(),
+          PackageManager.GET_META_DATA);
+      } catch (PackageManager.NameNotFoundException e) {
+        e.printStackTrace();
+      }
+      mkey = applicationInfo.metaData.getString("com.plugin.aliyun.SECRET_KEY");
+    }
+
+
     //普通上传
     if (action.equals("onOssNormalPut")) {
       old_prg = 0;
