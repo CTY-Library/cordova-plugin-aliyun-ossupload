@@ -37,26 +37,30 @@ alert(uploadurlfile)
 
 this.xxxx.getOSSToken({},false).then(result => {
 
-try{
 
-    aliyunOSSupload.onOssNormalPut(
-    
-    (e) => {_this.onSuccess(e)},
-    
-    (e) =>{_this.onError(e)},
-    
-    result.data,
-    
-    'oss-cn-shenzhen.aliyuncs.com',
-    
-    'xxx',
-    
-    'mp3_20191115_152830.mp3',
-    
-     uploadurlfile,
+
+    try{
+     aliyunOSSupload.onOssNormalPut(
      
-    );
-    
-}catch(e){alert(' error: '+e)}; 
+         (e) => {_this.onSuccess(e)},
+         
+         (e) =>{_this.onError(e)},
+         
+         result.data,
+         
+         'oss-cn-shenzhen.aliyuncs.com',
+         
+         'xxx',
+         
+         'mp3_20191115_152830.mp3',
+         
+          uploadurlfile,
+          
+         );
 
-});
+     }catch(e){alert(' error: '+e)}; 
+    );
+
+
+    
+
