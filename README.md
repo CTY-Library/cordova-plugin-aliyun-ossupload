@@ -15,7 +15,7 @@ https://github.com/aliyun/aliyun-oss-android-sdk
 
 安装命令
 
- ionic cordova plugin add  https://github.com/lounai-chen/cordova-plugins-aliyunOSSupload  --variable SECRETKEY=xxxxxx --save 
+ ionic cordova plugin add  https://github.com/lounai-chen/cordova-plugin-aliyun-ossupload  --variable SECRETKEY=xxxxxx --save 
  
  Android9.0以上是默认所有http请求的，需要在AndroidManifest.xml的application代码中配置如下 
  
